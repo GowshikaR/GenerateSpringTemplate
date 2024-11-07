@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: generate-java-app3
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: generate-java-app3
+  template:
+    metadata:
+      labels:
+        app: generate-java-app3
+    spec:
+      containers:
+      - name: generate-java-app3
+        image:
+        ports:
+        - containerPort: 8080

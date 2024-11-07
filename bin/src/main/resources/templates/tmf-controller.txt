@@ -1,0 +1,56 @@
+package {{packageName}}.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import com.example.demo.service.{{controllerName}}Service;
+@RestController
+@RequestMapping("/api/{{artifactId}}/{{controllerName}}")
+public class {{controllerName}}Controller {
+
+    @Autowired
+    private {{controllerName}}Service {{controllerName.toLowerCase()}}Service;
+
+    {% if methods.contains("getAll") %}
+    @GetMapping
+    public ResponseEntity<?> getAll() {
+        return ResponseEntity.ok({{controllerName.toLowerCase()}}Service.getAll());
+    }
+    {% getAll endif %}
+
+    {% if methods.contains("get") %}
+    @GetMapping("/{id}")
+    public ResponseEntity<?> get(@PathVariable String id) {
+        return ResponseEntity.ok({{controllerName.toLowerCase()}}Service.getById(id));
+    }
+    {%  get endif  %}
+
+    {% if methods.contains("post") %}
+    @PostMapping
+    public ResponseEntity<?> create(@RequestBody Object object) {
+        return ResponseEntity.ok({{controllerName.toLowerCase()}}Service.create(object));
+    }
+    {% post endif %}
+
+    {% if methods.contains("put") %}
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable String id, @RequestBody Object object) {
+        return ResponseEntity.ok({{controllerName.toLowerCase()}}Service.update(id, object));
+    }
+    {% put endif %}
+
+    {% if methods.contains("patch") %}
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> patch(@PathVariable String id, @RequestBody Object object) {
+        return ResponseEntity.ok({{controllerName.toLowerCase()}}Service.patch(id, object));
+    }
+    {% patch endif %}
+
+    {% if methods.contains("delete") %}
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable String id) {
+        {{controllerName.toLowerCase()}}Service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+    {% delete endif %}
+}

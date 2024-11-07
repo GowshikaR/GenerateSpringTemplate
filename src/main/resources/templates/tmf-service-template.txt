@@ -1,0 +1,94 @@
+package {{packageName}}.service;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+
+import java.util.List;
+
+@Service
+public class {{serviceName}} {
+   {% if methods.contains("getAll") %}
+    @Value("${{{tmfStandard.toLowerCase()}}.{{controllerName.toLowerCase()}}.get-all}")
+    private String getAllUrl;
+    {% getAll endif %}
+{% if methods.contains("get") %}
+    @Value("${{{tmfStandard.toLowerCase()}}.{{controllerName.toLowerCase()}}.get-by-id}")
+    private String getByIdUrl;
+{%  get endif  %}
+{% if methods.contains("post") %}
+    @Value("${{{tmfStandard.toLowerCase()}}.{{controllerName.toLowerCase()}}.create}")
+    private String createUrl;
+{% post endif %}
+{% if methods.contains("patch") %}
+    @Value("${{{tmfStandard.toLowerCase()}}.{{controllerName.toLowerCase()}}.patch}")
+    private String updateUrl;
+{% patch endif %}
+{% if methods.contains("delete") %}
+    @Value("${{{tmfStandard.toLowerCase()}}.{{controllerName.toLowerCase()}}.delete}")
+    private String deleteUrl;
+{% delete endif %}
+    private final RestTemplate restTemplate;
+
+    public {{serviceName}}(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
+
+    {% if methods.contains("getAll") %}
+    public List<?> getAll() {
+        ResponseEntity<List> response = restTemplate.getForEntity(getAllUrl, List.class);
+        return response.getBody();
+    }
+    {% getAll endif %}
+
+    {% if methods.contains("get") %}
+    public Object getById(String id) {
+        String url = getByIdUrl.replace("{id}", id);
+        return restTemplate.getForObject(url, Object.class);
+    }
+    {%  get endif  %}
+
+    {% if methods.contains("post") %}
+    public Object create(Object requestObject) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/json");
+
+        HttpEntity<Object> requestEntity = new HttpEntity<>(requestObject, headers);
+        ResponseEntity<Object> response = restTemplate.postForEntity(createUrl, requestEntity, Object.class);
+        return response.getBody();
+    }
+    {% post endif %}
+
+    {% if methods.contains("patch") %}
+    public Object patch(String id, Object requestObject) {
+        String url = updateUrl.replace("{id}", id);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/json");
+
+        HttpEntity<Object> requestEntity = new HttpEntity<>(requestObject, headers);
+        ResponseEntity<Object> response = restTemplate.postForEntity(url, requestEntity, Object.class);
+        return response.getBody();
+    }
+    {% patch endif %}
+    {% if methods.contains("put") %}
+        public Object put(String id, Object requestObject) {
+            String url = updateUrl.replace("{id}", id);
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Content-Type", "application/json");
+
+            HttpEntity<Object> requestEntity = new HttpEntity<>(requestObject, headers);
+            ResponseEntity<Object> response = restTemplate.postForEntity(url, requestEntity, Object.class);
+            return response.getBody();
+        }
+        {% put endif %}
+
+    {% if methods.contains("delete") %}
+    public void delete(String id) {
+        String url = deleteUrl.replace("{id}", id);
+        restTemplate.delete(url);
+    }
+    {% delete endif %}
+}

@@ -1,0 +1,28 @@
+package {{packageName}}.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import {{packageName}}.service.{{serviceName}};
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+@RestController
+@RequestMapping("/{{tmfStandard}}/{{controllerName.toLowerCase()}}")
+public class {{controllerName}}Controller {
+
+    private static final Logger logger = LoggerFactory.getLogger({{controllerName}}Controller.class);
+
+    @Autowired
+    private {{serviceName}} {{controllerName.toLowerCase()}}Service;
+
+    {% for method in {{notificationMethods}}.split(",") %}
+    @PostMapping("/listener/{{method}}")
+    public ResponseEntity<String> {{method}}(@RequestBody String eventBody) {
+        logger.info("Received {{method}} notification");
+        // Process the notification
+        return ResponseEntity.ok({{controllerName.toLowerCase()}}Service.createNotificationListner(object));
+    }
+
+    {% endfor %}
+}
