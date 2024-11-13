@@ -1,0 +1,6 @@
+user.name=GowshikaR
+user.email=arjunbryant2@gmail.com
+filter.lfs.smudge=git-lfs smudge -- %f
+filter.lfs.process=git-lfs filter-process
+filter.lfs.required=true
+filter.lfs.clean=git-lfs clean -- %f
