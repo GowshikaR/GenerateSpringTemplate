@@ -8,6 +8,7 @@ public class GenerateSpringTemplateApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(GenerateSpringTemplateApplication.class, args);
+		System.out.println("Generation of TMFF");
 	}
 
 }
